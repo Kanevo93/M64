@@ -1,0 +1,31 @@
+# PowerApps and Power Platform files
+*.msapp
+*.pbix
+*.pbit
+*.zip
+*.tmp
+
+# Development and backup files
+*~
+*.bak
+*.orig
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+/tmp/
+temp/

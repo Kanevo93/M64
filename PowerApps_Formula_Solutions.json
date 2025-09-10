@@ -1,0 +1,62 @@
+{
+  "powerAppsVersion": "3.24",
+  "schemaVersion": "1.0",
+  "documentType": "PowerFx Formula Solutions",
+  "solutions": {
+    "qualityOrderDisplayIssue": {
+      "problemDescription": "String concatenation result being treated as number",
+      "errorMessage": "The value 'Quality Order #: 000016' cannot be converted to a number",
+      "affectedControls": ["ListViewQO"],
+      "solutions": [
+        {
+          "type": "displayFormula",
+          "description": "Safe display formula for labels",
+          "formula": "\"Quality Order #: \" & Text(Coalesce(ListViewQO.Selected.Title, \"N/A\"))",
+          "context": "Label.Text property"
+        },
+        {
+          "type": "dataFormula", 
+          "description": "Extract numeric value for calculations",
+          "formula": "If(IsNumeric(ListViewQO.Selected.Title), Value(ListViewQO.Selected.Title), 0)",
+          "context": "Numeric operations"
+        },
+        {
+          "type": "validatedFormula",
+          "description": "Error-resistant display with validation",
+          "formula": "If(IsBlank(ListViewQO.Selected.Title), \"No Quality Order Selected\", If(IsNumeric(ListViewQO.Selected.Title), \"Quality Order #: \" & Text(Value(ListViewQO.Selected.Title)), \"Quality Order #: \" & Text(ListViewQO.Selected.Title)))",
+          "context": "Production-ready display"
+        }
+      ],
+      "testScenarios": [
+        {
+          "input": "000016",
+          "expectedDisplay": "Quality Order #: 000016",
+          "expectedNumeric": 16
+        },
+        {
+          "input": "",
+          "expectedDisplay": "No Quality Order Selected", 
+          "expectedNumeric": 0
+        },
+        {
+          "input": "ABC123",
+          "expectedDisplay": "Quality Order #: ABC123",
+          "expectedNumeric": 0
+        }
+      ]
+    }
+  },
+  "commonPatterns": {
+    "safeStringConcatenation": "\"Prefix: \" & Text(Coalesce(SourceValue, \"Default\"))",
+    "safeNumericConversion": "If(IsNumeric(TextValue), Value(TextValue), 0)",
+    "typeValidation": "IsNumeric(InputValue) && !IsBlank(InputValue)"
+  },
+  "preventionGuidelines": [
+    "Always use Text() for display concatenation",
+    "Always use Value() for numeric operations", 
+    "Validate data types before operations using IsNumeric()",
+    "Separate display logic from business logic",
+    "Use Coalesce() to handle blank/null values",
+    "Test formulas with edge cases including blank, zero, and text values"
+  ]
+}
